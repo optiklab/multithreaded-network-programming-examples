@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     struct hostent *hp;
     if ((hp = gethostbyname(argv[1])) == 0)
     {
-        perror("Error of calling gethostbyname"); /* или strerror */
+        perror("Error of calling gethostbyname"); /* Or use strerror */
         exit(1);
     }
 

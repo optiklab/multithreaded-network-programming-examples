@@ -112,9 +112,9 @@ void main()
 
         printf("Received from client: %s, %d bytes\n", command, received);
 
-        if (received == 22)// && command[21] == '\n')
+        if (received == 22)
         {
-            // Get znak zodiak
+            // Get zodiak
             char zodiak[11];
             for (int i = 10; i < 21; i++)
             {
