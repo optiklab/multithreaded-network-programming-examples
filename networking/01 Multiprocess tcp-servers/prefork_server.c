@@ -24,7 +24,7 @@ void main()
     int sockfd = -1;
     if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
     {
-        perror("Error of calling socket"); /* или strerror */
+        perror("Error of calling socket"); /* or use strerror */
         exit(EXIT_FAILURE);
     }
 
@@ -73,8 +73,8 @@ void main()
         switch (pid = fork())
         {
         case -1:
-            perror("Error of calling fork"); /* произошла ошибка */
-            exit(EXIT_FAILURE); /*выход из родительского процесса*/
+            perror("Error of calling fork");
+            exit(EXIT_FAILURE);  
         case 0:
         {
             int cpid = getpid();
@@ -103,8 +103,8 @@ void main()
                 sleep(1);
             }
 
-            // Если был вызыван fork, то дескриптор будет доступен и в процессе родителя и child-процессе.
-            // Соединение разрывается только когда закрыты все дескрипторы, связанные с сокетом.
+            // Descriptor continues to be available in parent process after fork() call.
+            // We need to close all descriptors linked to socket.
             close(ns);
             printf("CHILD %d: Exit!\n", cpid);
             exit(0);

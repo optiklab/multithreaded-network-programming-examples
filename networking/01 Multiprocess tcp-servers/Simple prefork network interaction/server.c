@@ -1,13 +1,16 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
-#include <sys/types.h> // для совместимости
+#include <sys/types.h> // For compatibility
 #include <sys/socket.h>
-#include <arpa/inet.h> // Для преобразования htonl, htons, ntohl, ntohs
+#include <arpa/inet.h> // For convertions htonl, htons, ntohl, ntohs
 #include <fcntl.h>
 #include <netdb.h>
-#include <unistd.h> // Для close()
-//#include <errno> - не используем, иногда может содержать ошибку другого процесса
+#include <unistd.h> // For close()
+//#include <errno> - don't use it because sometimes it may contains an error from another process
+
+// Task:
+// Create an example of interaction algorithm between client and prefork TCP server
 
 #define EXIT_FAILURE 1
 #define PORTNUM 1500 // Port > 1024 because program will not work not as root.
@@ -18,7 +21,7 @@ void main()
     int sockfd = -1;
     if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
     {
-        perror("Error of calling socket"); /* или strerror */
+        perror("Error of calling socket"); /* or use strerror */
         exit(EXIT_FAILURE);
     }
 
@@ -32,7 +35,7 @@ void main()
 
     // Set address
     struct sockaddr_in serv_addr;
-    bzero(&serv_addr, sizeof(serv_addr)); // устаревшая, TODO use memset
+    bzero(&serv_addr, sizeof(serv_addr)); // depticated function! TODO use memset
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);  // 0.0.0.0
 
@@ -63,7 +66,7 @@ void main()
     {
         socklen_t addrlen;
 
-        bzero(&clnt_addr, sizeof(clnt_addr)); // устаревшая, TODO use memset
+        bzero(&clnt_addr, sizeof(clnt_addr)); // depticated function! TODO use memset
         addrlen = sizeof(clnt_addr);
 
         if ((ns = accept(sockfd, (struct sockaddr *)&clnt_addr, &addrlen)) == -1)
@@ -97,8 +100,8 @@ void main()
             exit(0);
         }
 
-        // Если был вызыван fork, то дескриптор будет доступен и в процессе родителя и child-процессе.
-        // Соединение разрывается только когда закрыты все дескрипторы, связанные с сокетом.
+        // If fork was called then descriptor will be available in both parent- and child-processes.
+        // Connection is closed only after closing both descriptions linked to socket.	
         close(ns);
 
         printf("Server off! To change this behavior, look in code!\n\n");

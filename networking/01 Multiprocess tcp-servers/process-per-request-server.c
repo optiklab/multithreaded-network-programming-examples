@@ -32,8 +32,6 @@ void child_zombie_handler(int sig)
         {
             printf("No more child processes.\n", done);
             break;
-            //if (errno == ECHILD)
-            //    break; // no more child processes
         }
         else
         {
@@ -60,7 +58,7 @@ void main()
     int sockfd = -1;
     if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
     {
-        perror("Error of calling socket"); /* или strerror */
+        perror("Error of calling socket"); /* or use strerror */
         exit(EXIT_FAILURE);
     }
 
@@ -78,7 +76,7 @@ void main()
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); // 0.0.0.0 (INADDR_LOOPBACK - 127.0.0.1)
 
-    // Change bytes order to network'
+    // Change bytes order to network
     serv_addr.sin_port = htons((int)PORTNUM);
 
     // Link socket with address
@@ -98,7 +96,7 @@ void main()
         exit(EXIT_FAILURE);
     }
 
-    // О появлении зомби ядро уведомляет родительский процесс сигналом SIGCHLD. http://habrahabr.ru/post/141206/
+    // Core notifies parent process about Zombie appearing by signal SIGCHLD.
     struct sigaction act;
     act.sa_handler = child_zombie_handler;
     sigemptyset(&act.sa_mask);
@@ -157,7 +155,7 @@ void main()
         }
 
         // If fork was called then descriptor will be available in both parent- and child-processes.
-        // Connection is closed only after closing both descriptions linked to socket.кетом.
+        // Connection is closed only after closing both descriptions linked to socket.
         close(ns);
 
         --counter;
