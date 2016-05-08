@@ -21,7 +21,7 @@ void kill_child_handler(int sig)
         0); // Blocked mode.
     if (done == -1)
     {
-        printf("No more child processes.\n", done);
+        printf("No more child processes.\n");
     }
     else
     {
@@ -40,7 +40,7 @@ void kill_child_handler(int sig)
     }
 }
 
-void main()
+int main()
 {    
     pid_t main_pid = getpid();
     
@@ -60,7 +60,7 @@ void main()
 
     // Make child.
     pid_t child_pid;
-    if(child_pid = fork())
+    if((child_pid = fork()))
     {
         printf("Started child process %d.\n", child_pid);
         
