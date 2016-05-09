@@ -14,7 +14,7 @@
 // Task:
 // Create Named Pipe aka FIFO to do write on one end and read on another end.
 
-void main()
+int main()
 {
     char * myfifo = "/tmp/myfifo";
     mkfifo(myfifo, 0666);
@@ -31,7 +31,7 @@ void main()
     {
         char string[] = "Hello, world!";
         int fd;
-        if (fd = open(myfifo, O_WRONLY))
+        if ((fd = open(myfifo, O_WRONLY)))
         {
             write(fd, string, (strlen(string)+1));
             close(fd);
@@ -46,7 +46,7 @@ void main()
         
         char readbuffer[80];
         int fd;
-        if (fd = open(myfifo, O_RDONLY))
+        if ((fd = open(myfifo, O_RDONLY)))
         {
             read(fd, readbuffer, 80);            
             printf("Process %d received string: %s\n", getpid(), readbuffer);

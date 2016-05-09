@@ -25,7 +25,6 @@ void run(CmdLine* command)
 {
     const int numPipes = 3;
     int i = 0;
-    pid_t pid;
 
     // Create all pipes.
     int pipefds[2*numPipes];
@@ -39,6 +38,7 @@ void run(CmdLine* command)
     }
     
     int j = 0;
+    pid_t pid;
     while(command)
     {
         pid = fork();

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 // Compilation:
@@ -10,7 +11,7 @@
 
 // Help:
 // Create pipe: who -> stdout -> [pfd[1] -> pfd[0]] -> stdin -> wc -l
-void main()
+int main()
 {
     printf("Result of operation is the same like if you type\n$>who | wc -l\n");
     

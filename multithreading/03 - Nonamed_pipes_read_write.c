@@ -12,7 +12,7 @@
 // Task:
 // Do write on one end and read on another end.
 
-void main()
+int main()
 {
     int     fd[2], nbytes;
     pid_t   childpid;
