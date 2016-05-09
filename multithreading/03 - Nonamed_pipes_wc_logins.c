@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "Common.h"
+
 // Compilation:
 // gcc "03 - Nonamed_pipes_wc_logins.c" -o nonamedpipeslogins
 
@@ -16,7 +18,10 @@ int main()
     printf("Result of operation is the same like if you type\n$>who | wc -l\n");
     
     int pfd[2];
-
+    
+    // Handle child process killing.
+    handle_child_finishing();
+    
     pipe(pfd);
 
     if (!fork())

@@ -3,10 +3,9 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <sys/socket.h>
 
-#define EXIT_FAILURE 1
+#include "Common.h"
 
 // Compilation:
 // gcc "05 - Socketpair_fd_passing.c" -o socketpairfdpassing
@@ -16,33 +15,6 @@
 // This technology should be helpful in programming multiprocess server programming to handle socket connections
 // in child processes instead of single parent process.
 
-void kill_child_handler(int sig)
-{
-    int status;
-    pid_t done = waitpid(
-        -1, // Any child
-        &status,
-        0); // Blocked mode.
-    if (done == -1)
-    {
-        printf("No more child processes.\n", done);
-    }
-    else
-    {
-        short isNormalTermination = WIFEXITED(status);
-        if (!isNormalTermination ||
-            // WEXITSTATUS should be used only if normal termination = true.
-            (isNormalTermination && WEXITSTATUS(status) != 0))
-        {
-            printf("Zombie for PID -- %d failed.\n", done);
-            exit(EXIT_FAILURE);
-        }
-        else
-        {
-            printf("Zombie for PID -- %d successfully removed.\n", done);
-        }
-    }
-}
 
 // Send information in a buffer via socket and attached additional information with that buffer i.e. our file descriptor.
 // We may send several file descriptors, but this is a simple example.
@@ -142,14 +114,12 @@ ssize_t sock_fd_read(int sock, void *buf, ssize_t bufsize,
         {
             if (cmsg->cmsg_level != SOL_SOCKET)
             {
-                fprintf(stderr, "invalid cmsg_level %d\n",
-                    cmsg->cmsg_level);
+                fprintf(stderr, "invalid cmsg_level %d\n", cmsg->cmsg_level);
                 exit(EXIT_FAILURE);
             }
             if (cmsg->cmsg_type != SCM_RIGHTS)
             {
-                fprintf(stderr, "invalid cmsg_type %d\n",
-                    cmsg->cmsg_type);
+                fprintf(stderr, "invalid cmsg_type %d\n", cmsg->cmsg_type);
                 exit(EXIT_FAILURE);
             }
             *fd = *((int *)CMSG_DATA(cmsg));
@@ -178,24 +148,17 @@ void child_read(int sock)
     ssize_t size;
     sleep(1);
     
-    for (;;)
+    size = sock_fd_read(sock, buf, sizeof(buf), &fd);
+    if (size > 0)
     {
-        size = sock_fd_read(sock, buf, sizeof(buf), &fd);
-        if (size <= 0)
-            break;
-        printf ("read size: %d, fd: %d\n", size, fd);
-        if (fd != -1)
-        {
-            write(fd, "hello, world\n", 13);
-            close(fd);
-        }
+        printf ("read size: %d, fd: %d, buffer: %s\n", (int)size, fd, buf);
     }
 }
 
 void parent_writes(int sock)
 {
-    ssize_t size = sock_fd_write(sock, "1", 1, 1);
-    printf ("wrote size: %d\n", size);
+    ssize_t size = sock_fd_write(sock, "TEST", 4, 1);
+    printf ("wrote size: %d\n", (int)size);
 }
 
 /*
@@ -248,25 +211,13 @@ void parent_writes(int sock)
 int main(int argc, char **argv)
 {
     int sv[2];
-    int pid;
+    pid_t pid;
     if (socketpair(AF_LOCAL, SOCK_STREAM, 0, sv) < 0)
     {
         perror("socketpair");
         exit(EXIT_FAILURE);
     }
     
-    // Handle child process killing.
-    struct sigaction kill_child_signal;
-    kill_child_signal.sa_handler = kill_child_handler;
-    sigemptyset(&kill_child_signal.sa_mask);
-    kill_child_signal.sa_flags = SA_RESTART; // Permanent handler.
-    
-    if (sigaction(SIGCHLD, &kill_child_signal, 0) == -1)
-    {
-        perror("Error of calling sigaction");
-        exit(EXIT_FAILURE);
-    }
-
     switch ((pid = fork()))
     {
     case 0:
@@ -281,6 +232,9 @@ int main(int argc, char **argv)
         parent_writes(sv[0]);
         break;
     }
+    
+    int status;
+    waitpid(pid, &status, 0);
     
     return 0;
 }

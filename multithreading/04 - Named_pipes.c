@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define EXIT_FAILURE 1
+#include "Common.h"
 
 // Compilation:
 // gcc "04 - Named_pipes.c" -o namedpipes
@@ -19,7 +19,9 @@ int main()
     char * myfifo = "/tmp/myfifo";
     mkfifo(myfifo, 0666);
     
-            
+    // Handle child process killing.
+    handle_child_finishing();
+    
     pid_t childpid;
     if((childpid = fork()) == -1)
     {
@@ -37,23 +39,24 @@ int main()
             close(fd);
         }
 
-        printf("Process %d done write and unlink fifo.\n", getpid());
+        printf("Child process %d done write and unlink fifo.\n", getpid());
         unlink(myfifo);
     }
     else
     {
-        printf("Process %d creates child %d\n", getpid(), childpid);
+        printf("Parent process %d creates child %d\n", getpid(), childpid);
         
         char readbuffer[80];
         int fd;
         if ((fd = open(myfifo, O_RDONLY)))
         {
             read(fd, readbuffer, 80);            
-            printf("Process %d received string: %s\n", getpid(), readbuffer);
+            printf("Parent process %d received string: %s\n", getpid(), readbuffer);
             close(fd);
         }
         unlink(myfifo);
     }
     
+    printf("Exit process %d\n", getpid());
     exit(0);
 }

@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#define EXIT_FAILURE 1
+#include "Common.h"
 
 // Compilation:
 // gcc "03 - Nonamed_pipes_read_write.c" -o nonamedpipesrw
@@ -18,7 +18,10 @@ int main()
     pid_t   childpid;
     char    string[] = "Hello, world!\n";
     char    readbuffer[80];
-
+    
+    // Handle child process killing.
+    handle_child_finishing();
+    
     pipe(fd);
     
     printf("Process %d creates child\n", getpid());
@@ -36,8 +39,7 @@ int main()
 
         /* Send "string" through the output side of pipe */
         write(fd[1], string, (strlen(string)+1));
-        printf("Done write in process %d\n", getpid());
-        exit(0);
+        printf("Done write in child process %d\n", getpid());
     }
     else
     {
@@ -48,6 +50,8 @@ int main()
         nbytes = read(fd[0], readbuffer, sizeof(readbuffer));
         printf("Received string: %s in process %d\n", readbuffer, getpid());
     }
+    
+    printf("End process %d\n", getpid());
     
     exit(0);
 }

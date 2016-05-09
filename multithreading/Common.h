@@ -1,4 +1,5 @@
 #include <sys/wait.h>
+#include <signal.h>
 
 #define EXIT_FAILURE 1
 
