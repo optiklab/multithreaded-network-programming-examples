@@ -25,7 +25,12 @@ int lock_write()
         return 0;
     }
     
-    flock(fd, LOCK_EX | LOCK_NB);
+    if (flock(fd, LOCK_EX | LOCK_NB) < 0)
+    {
+        printf("Access to LOCK error.\n");
+        close(fd);
+        return 0;
+    }
         
     const char buf[] = "ABRACADABRA";
     write(fd, &buf, strlen(buf) + 1);
@@ -47,7 +52,12 @@ int lock_read(pid_t pid)
         return 0;
     }
     
-    flock(fd, LOCK_SH | LOCK_NB);
+    if (flock(fd, LOCK_SH | LOCK_NB) < 0)
+    {
+        printf("Access to LOCK error.\n");
+        close(fd);
+        return 0;
+    }
     
     char buf[12];
     read(fd, &buf, 12);
