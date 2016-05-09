@@ -67,16 +67,7 @@ int main()
     printf("Start of process %d\n", main_pid);
     
     // Handle child process killing.
-    struct sigaction kill_child_signal;
-    kill_child_signal.sa_handler = kill_child_handler;
-    sigemptyset(&kill_child_signal.sa_mask);
-    kill_child_signal.sa_flags = SA_RESTART; // Permanent handler.
-    
-    if (sigaction(SIGCHLD, &kill_child_signal, 0) == -1)
-    {
-        perror("Error of calling sigaction");
-        exit(EXIT_FAILURE);
-    }
+    handle_child_finishing();
     
     // Lock file for writing.
     if (lock_write())
@@ -93,14 +84,14 @@ int main()
     pid_t child_pid;
     if ((child_pid = fork()) > 0)
     {
-        printf("Start of child process %d.\n", child_pid);
+        printf("PARENT: Start of child process %d.\n", child_pid);
         
         // Parent makes child 2.
         pid_t next_child_pid;
         if ((next_child_pid = fork()) > 0)
         {
-            printf("Start of child process %d.\n", next_child_pid);
-            printf("Parent process %d sleeps 5 seconds.\n", getpid());
+            printf("PARENT: Start of child process %d.\n", next_child_pid);
+            printf("PARENT: Parent process %d sleeps 5 seconds.\n", getpid());
             sleep(5);
         }
     }

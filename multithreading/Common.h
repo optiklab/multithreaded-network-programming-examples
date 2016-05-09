@@ -28,3 +28,18 @@ void kill_child_handler(int sig)
         }
     }
 }
+
+void handle_child_finishing()
+{
+    // Handle child process killing.
+    struct sigaction kill_child_signal;
+    kill_child_signal.sa_handler = kill_child_handler;
+    sigemptyset(&kill_child_signal.sa_mask);
+    kill_child_signal.sa_flags = SA_RESTART; // Permanent handler.
+    
+    if (sigaction(SIGCHLD, &kill_child_signal, 0) == -1)
+    {
+        perror("Error of calling sigaction");
+        exit(EXIT_FAILURE);
+    }
+}

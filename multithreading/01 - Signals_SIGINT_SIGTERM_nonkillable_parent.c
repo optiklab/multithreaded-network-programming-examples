@@ -73,7 +73,7 @@ int main()
     // Make child.
     if((child_pid = fork()))
     {
-        printf("Start of child process %d forever. Press Ctrl+C OR write 'kill -9 %d' to terminate child.\n", child_pid, child_pid);
+        printf("PARENT: Start of child process %d forever. Press Ctrl+C OR write 'kill -9 %d' to terminate child.\n", child_pid, child_pid);
     }
     else
     {
