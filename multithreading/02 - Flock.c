@@ -5,44 +5,16 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/file.h>
-#include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define EXIT_FAILURE 1
+#include "Common.h"
 
 // Compilation:
 // gcc "02 - Flock.c" -o flockc
 
 // This program imitates work of 3 processes (parent and 2 childs) with some file with flock-blocking, which means
 // that 2 processes cannot both write into file, but can both read file in the same time. However it cannot write and read in the same time.
-
-void kill_child_handler(int sig)
-{
-    int status;
-    pid_t done = waitpid(-1, // Any child
-                         &status,
-                         0); // Blocked mode.
-    if (done == -1)
-    {
-        printf("No more child processes.\n");
-    }
-    else
-    {
-        short isNormalTermination = WIFEXITED(status);
-        if (!isNormalTermination ||
-            // WEXITSTATUS should be used only if normal termination = true.
-            (isNormalTermination && WEXITSTATUS(status) != 0))
-        {
-            printf("Zombie for PID -- %d failed.\n", done);
-            exit(EXIT_FAILURE);
-        }
-        else
-        {
-            printf("Zombie for PID -- %d successfully removed.\n", done);
-        }
-    }
-}
 
 int lock_write()
 {

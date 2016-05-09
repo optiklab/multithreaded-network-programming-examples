@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/wait.h>
 
-#define EXIT_FAILURE 1
+#include "Common.h"
 
 pid_t child_pid;
 

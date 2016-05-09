@@ -2,43 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/wait.h>
 
-#define EXIT_FAILURE 1
+#include "Common.h"
 
 // To compile:
 // gcc -std=gnu99 "01 - Signals_SIGCHLD.c" -o signals_sigchld
 
 // Task:
 // Create a program which creates a child process and handles SIGCHLD signal from its childs.
-
-void kill_child_handler(int sig)
-{
-    int status;
-    pid_t done = waitpid(
-        -1, // Any child
-        &status,
-        0); // Blocked mode.
-    if (done == -1)
-    {
-        printf("No more child processes.\n");
-    }
-    else
-    {
-        short isNormalTermination = WIFEXITED(status);
-        if (!isNormalTermination ||
-            // WEXITSTATUS should be used only if normal termination = true.
-            (isNormalTermination && WEXITSTATUS(status) != 0))
-        {
-            printf("Zombie for PID -- %d failed.\n", done);
-            exit(EXIT_FAILURE);
-        }
-        else
-        {
-            printf("Zombie for PID -- %d successfully removed.\n", done);
-        }
-    }
-}
 
 int main()
 {    
