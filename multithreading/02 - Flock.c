@@ -17,6 +17,33 @@
 // This program imitates work of 3 processes (parent and 2 childs) with some file with flock-blocking, which means
 // that 2 processes cannot both write into file, but can both read file in the same time. However it cannot write and read in the same time.
 
+void kill_child_handler(int sig)
+{
+    int status;
+    pid_t done = waitpid(-1, // Any child
+                         &status,
+                         0); // Blocked mode.
+    if (done == -1)
+    {
+        printf("No more child processes.\n");
+    }
+    else
+    {
+        short isNormalTermination = WIFEXITED(status);
+        if (!isNormalTermination ||
+            // WEXITSTATUS should be used only if normal termination = true.
+            (isNormalTermination && WEXITSTATUS(status) != 0))
+        {
+            printf("Zombie for PID -- %d failed.\n", done);
+            exit(EXIT_FAILURE);
+        }
+        else
+        {
+            printf("Zombie for PID -- %d successfully removed.\n", done);
+        }
+    }
+}
+
 int lock_write()
 {
     int fd;
@@ -61,11 +88,23 @@ int lock_read(pid_t pid)
     return 1;
 }
 
-void main()
+int main()
 {    
     pid_t main_pid = getpid();
     
     printf("Start of process %d\n", main_pid);
+    
+    // Handle child process killing.
+    struct sigaction kill_child_signal;
+    kill_child_signal.sa_handler = kill_child_handler;
+    sigemptyset(&kill_child_signal.sa_mask);
+    kill_child_signal.sa_flags = SA_RESTART; // Permanent handler.
+    
+    if (sigaction(SIGCHLD, &kill_child_signal, 0) == -1)
+    {
+        perror("Error of calling sigaction");
+        exit(EXIT_FAILURE);
+    }
     
     // Lock file for writing.
     if (lock_write())
@@ -89,12 +128,11 @@ void main()
         if ((next_child_pid = fork()) > 0)
         {
             printf("Start of child process %d.\n", next_child_pid);
-            
             printf("Parent process %d sleeps 5 seconds.\n", getpid());
             sleep(5);
         }
     }
-
+    
     printf("Process %d tries to access the file...\n", getpid());
     
     int canread = 0;
