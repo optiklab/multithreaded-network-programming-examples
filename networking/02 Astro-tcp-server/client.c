@@ -17,6 +17,9 @@
 // HOROSCOPE - get astrological forecasts from server.
 // STARS SAY - send forecast to server.
 
+// Compile:
+// gcc -std=c99 client.c -o client
+
 // Function read number of bytes and return it. It is necessary to use such a function for read,
 // because system call recv may return not full response and it will be necessary to read in loop.
 ssize_t receive_all(int fd, char *buf, size_t len)

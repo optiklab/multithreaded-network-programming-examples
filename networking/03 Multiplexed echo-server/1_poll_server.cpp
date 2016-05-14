@@ -14,6 +14,9 @@
 
 #define PORTNUM 1500 // Port > 1024 because program will not work not as root.
 
+// Compile:
+// g++ -std=c++11 1_poll_server.cpp -o poll_server
+
 int set_nonblock_mode(int fd)
 {
     int flags;

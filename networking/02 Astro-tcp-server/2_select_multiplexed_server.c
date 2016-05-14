@@ -24,6 +24,9 @@
 // It should remember forecast on a STARS SAY command from client. Server should handle possible errors.
 // This implementation should be full asynchronous based on "select" system call available in Linux.
 
+// Compile:
+// gcc -std=c99 2_select_multiplexed_server.c -o select_multiplexed_server
+
 char zodiaks[12][12] = { "Aries      ", "Taurus     ", "Gemini     ", "Cancer     ",
 "Leo        ", "Virgo      ", "Libra      ", "Scorpio    ", "Sagittarius",
 "Capricorn  ", "Aquarius   ", "Pisces     " };

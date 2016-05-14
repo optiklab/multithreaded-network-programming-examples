@@ -32,6 +32,9 @@
 // It should remember forecast on a STARS SAY command from client. Server should handle possible errors.
 // This implementation should be created as automata - it is a middle step from simple blocked server to fully asynchronous server.
 
+// Compile:
+// gcc -std=c99 1_automata_based_server.c -o automata_based_server
+
 char zodiaks[12][12] = { "Aries      ", "Taurus     ", "Gemini     ", "Cancer     ",
 "Leo        ", "Virgo      ", "Libra      ", "Scorpio    ", "Sagittarius",
 "Capricorn  ", "Aquarius   ", "Pisces     " };
