@@ -33,6 +33,30 @@ ssize_t receive_all(int fd, char *buf, size_t len)
     return pos;
 }
 
+/* 
+// Just another example of the same receive algorithm.
+// Taken from book Effective TCP/IP.
+int receive_all(int fd, char *buf, size_t len)
+{
+    int cnt, rc;
+    cnt = len;
+    while (cnt > 0)
+    {
+        rc = recv(fd, buf, cnt, 0);
+        if (rc < 0)
+        {
+            if (errno == EINTR)
+                continue;
+            return -1;
+        }
+        if (rc == 0)
+            return len - cnt;
+        buf += rc;
+        cnt -= rc;
+    }
+}
+*/
+
 void main()
 {
     printf("ASTRO Server PID -- %d.\n", getpid());

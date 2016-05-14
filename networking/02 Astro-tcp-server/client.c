@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <fcntl.h>
 #include <netdb.h>
 #include <unistd.h>
 
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
     struct hostent *hp;
     if ((hp = gethostbyname(argv[1])) == 0)
     {
-        perror("Error of calling gethostbyname"); /* или strerror */
+        perror("Error of calling gethostbyname"); /* or strerror */
         exit(1);
     }
 
@@ -51,7 +52,7 @@ int main(int argc, char **argv)
     serv_addr.sin_port = htons(PORTNUM);
 
     int sockfd = -1;
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) // IPPROTO_TCP == 0
     {
         perror("Error of calling socket");
         exit(1);
@@ -73,11 +74,11 @@ int main(int argc, char **argv)
         // TEST1. Set some HOROSCOPE.
 
         char setzodiak[] = "STARS SAY Aries      ";
-        int sent = send(sockfd, setzodiak, strlen(setzodiak) + 1, 0);
+        int sent = send(sockfd, setzodiak, strlen(setzodiak) + 1, MSG_NOSIGNAL); // MSG_NOSIGNAL == 0
         printf("Sent to server: %s, %d bytes\n", setzodiak, sent);
 
         char desc[] = "Some of my descriptions here.                                                  ";
-        sent = send(sockfd, desc, strlen(desc) + 1, 0);
+        sent = send(sockfd, desc, strlen(desc) + 1, MSG_NOSIGNAL);
         printf("Sent to server: %s, %d bytes\n", desc, sent);
 
         char thanks[10];
@@ -93,7 +94,7 @@ int main(int argc, char **argv)
     {
         // TEST2. Get HOROSCOPE which was set.
         char getzodiak[] = "HOROSCOPE Aries      ";
-        int sent = send(sockfd, getzodiak, strlen(getzodiak) + 1, 0);
+        int sent = send(sockfd, getzodiak, strlen(getzodiak) + 1, MSG_NOSIGNAL);
         printf("Sent to server: %s, %d bytes\n", getzodiak, sent);
 
         char horoscope[80];
@@ -109,7 +110,7 @@ int main(int argc, char **argv)
     {
         // TEST3. Good COMMAND, Bad attributes.
         char getzodiak[] = "HOROSCOPE Abracadabra";
-        int sent = send(sockfd, getzodiak, strlen(getzodiak) + 1, 0);
+        int sent = send(sockfd, getzodiak, strlen(getzodiak) + 1, MSG_NOSIGNAL);
         printf("Sent to server: %s, %d bytes\n", getzodiak, sent);
 
         char denied[10];
@@ -125,7 +126,7 @@ int main(int argc, char **argv)
     {
         // TEST4. Wrong COMMAND.
         char wrongCommand[] = "ABRA CADABRA BOOM BOOM";
-        int sent = send(sockfd, wrongCommand, strlen(wrongCommand) + 1, 0);
+        int sent = send(sockfd, wrongCommand, strlen(wrongCommand) + 1, MSG_NOSIGNAL);
         printf("Sent to server: %s, %d bytes\n", wrongCommand, sent);
 
         char denied[10];
@@ -135,5 +136,5 @@ int main(int argc, char **argv)
     }
 
     close(sockfd);
-    printf("Client off!\n\n"); \
+    printf("Client off!\n\n");
 }
