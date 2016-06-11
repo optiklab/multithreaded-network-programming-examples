@@ -17,6 +17,12 @@
 // Compile:
 // gcc -std=c99 0_simple_blocker_server.c -o simple_blocker_server
 
+// Problems with implementation:
+// - Receive_all exists, but no Send_all
+// - No timer for interrupting connection
+// - Should be output to syslog instead of printf
+// - errno not used
+
 // Function read number of bytes and return it. It is necessary to use such a function for read,
 // because system call recv may return not full response and it will be necessary to read in loop.
 ssize_t receive_all(int fd, char *buf, size_t len)
