@@ -1,7 +1,10 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+#define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
+
+#define FAILURE -1
 
 void kill_child_handler(int sig)
 {
@@ -36,7 +39,7 @@ void handle_child_finishing()
     struct sigaction kill_child_signal;
     kill_child_signal.sa_handler = kill_child_handler;
     sigemptyset(&kill_child_signal.sa_mask);
-    kill_child_signal.sa_flags = SA_RESTART; // Permanent handler.
+    kill_child_signal.sa_flags = SA_RESTART; // Mark handler as Permanent.
     
     if (sigaction(SIGCHLD, &kill_child_signal, 0) == -1)
     {
