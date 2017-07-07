@@ -1,10 +1,8 @@
-#include <sys/wait.h>
-#include <signal.h>
+#ifndef _COMMON_H_
+#define _COMMON_H_
 
-#define EXIT_SUCCESS 0
-#define EXIT_FAILURE 1
 
-#define FAILURE -1
+#include "Defs.h"
 
 void kill_child_handler(int sig)
 {
@@ -47,3 +45,5 @@ void handle_child_finishing()
         exit(EXIT_FAILURE);
     }
 }
+
+#endif /* _COMMON_H_ */

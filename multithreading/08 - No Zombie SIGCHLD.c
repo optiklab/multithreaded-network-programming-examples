@@ -1,4 +1,3 @@
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,7 +5,7 @@
 #include "Common.h"
 
 // To compile:
-// gcc -std=gnu99 "01 - Signals_SIGCHLD.c" -o signals_sigchld
+// gcc -std=gnu99 "08 - No Zombie SIGCHLD.c" -o nozombie
 
 // Task:
 // Create a program which creates a child process and handles SIGCHLD signal from its childs.

@@ -9,7 +9,7 @@ extern char ** environ; // Global variable availble to any process for read/writ
 #define OVERWRITE 1
 
 // Compilation:
-// gcc -std=gnu99 "01 - Env Vars.c" -o envVars
+// gcc -std=gnu99 "02 - Env Vars.c" -o envVars
 
 // Task:
 // Read, write environment variables.
