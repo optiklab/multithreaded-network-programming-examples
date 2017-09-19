@@ -9,7 +9,7 @@
 #include "Common.h"
 
 // Compilation:
-// gcc "02 - Lock_via_file.c" -o lockviafile
+// gcc "32 - Lock_via_file.c" -o lockviafile
 
 // This program imitates work of 2 processes (parent and child) with some external resource.
 // To access to resource both processes checks existance of a file, which means resource is still locked.

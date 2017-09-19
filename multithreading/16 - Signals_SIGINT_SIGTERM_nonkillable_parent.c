@@ -7,7 +7,7 @@
 pid_t child_pid;
 
 // Compilation:
-// gcc "01 - Signals_SIGINT_SIGTERM_nonkillable_parent.c" -o nonkillable_parent
+// gcc "16 - Signals_SIGINT_SIGTERM_nonkillable_parent.c" -o nonkillable_parent
 
 // Task:
 // Create a program which creates a child process and this child process can be killed by SIGTERM or SIGINT.

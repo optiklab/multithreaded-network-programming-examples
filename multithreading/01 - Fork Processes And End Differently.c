@@ -6,7 +6,7 @@
 #include "Common.h"
 
 // Compilation:
-// gcc -std=gnu99 "01 - Fork Processes And End Differently.c" -o forkEndProcesses
+// gcc -std=gnu99 ErrorHandling.c LogF.c "01 - Fork Processes And End Differently.c" -o forkEndProcesses
 
 // Task:
 // Use fork to create a child processes, which stop working with different reasons.

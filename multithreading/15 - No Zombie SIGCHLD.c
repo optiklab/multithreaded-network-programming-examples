@@ -5,7 +5,7 @@
 #include "Common.h"
 
 // To compile:
-// gcc -std=gnu99 "08 - No Zombie SIGCHLD.c" -o nozombie
+// gcc -std=gnu99 "15 - No Zombie SIGCHLD.c" -o nozombie
 
 // Task:
 // Create a program which creates a child process and handles SIGCHLD signal from its childs.

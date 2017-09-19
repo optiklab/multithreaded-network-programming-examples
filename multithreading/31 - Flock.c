@@ -10,7 +10,7 @@
 #include "Common.h"
 
 // Compilation:
-// gcc "02 - Flock.c" -o flockc
+// gcc "31 - Flock.c" -o flockc
 
 // This program imitates work of 3 processes (parent and 2 childs) with some file with flock-blocking, which means
 // that 2 processes cannot both write into file, but can both read file in the same time. However it cannot write and read in the same time.

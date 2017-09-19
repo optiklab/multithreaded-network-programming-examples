@@ -3,15 +3,17 @@
 #include "Defs.h"
 
 // Compilation:
-// gcc -std=gnu99 -pthread ErrorHandling.c LogF.c "07 - PThreads Joinable with Sync.c" -o joinable_threads_synced
+// gcc -std=gnu99 -pthread ErrorHandling.c LogF.c "07 - PThreads Joinable Mutexed.c" -o joinable_threads_synced
 
 // Task:
-// Simple example of an application working with 2 threads, where parent waits results from child.
+// Simple example of an application working with 2 threads, where parent WAITS for a results from child.
 // Thread 2 stops calculation if common value already more than limit.
 
 // Access to variable is controlled with mutex.
 
+// Can be static, extern and even auto. In case of auto need to initialize with function pthread_mutex_init, not by a constant (for thread safety).
 static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+
 static long x = 0;
 
 static void* thread_func(void* arg)
@@ -34,6 +36,8 @@ static void* thread_func(void* arg)
     return (void *)x;
 
 EC_CLEANUP_BGN
+    // To avoid dead lock: Thread 2 faulted on mutex_unlock, this Thread 2 is locked forever.
+    (void)pthread_mutex_unlock(&mtx);
     EC_FLUSH("thread_func")
     return NULL;
 EC_CLEANUP_END

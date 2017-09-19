@@ -6,10 +6,8 @@
 // gcc -std=gnu99 -pthread ErrorHandling.c LogF.c "06 - PThreads Joinable BAD.c" -o joinable_threads
 
 // Task:
-// Simple example of an application working with 2 threads, where parent waits results from child.
+// Simple example of an application working with 2 threads, where parent WAITS for a results from child.
 // Thread 2 stops calculation if common value already more than limit.
-
-// WARNING! Code contains a problem marked with comment.
 
 static long x = 0;
 

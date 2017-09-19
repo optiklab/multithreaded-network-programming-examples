@@ -10,6 +10,7 @@
 
 #include <sys/types.h>
 #include <sys/wait.h> // For wait, waitpid
+#include <sys/resource.h> // For working with rlimits
 #include <signal.h>
 
 // For LogF
@@ -31,5 +32,9 @@ typedef int bool;
 
 #include "ErrorHandling.h"
 #include "LogF.h"
+
+/*File-permission-bit symbols*/
+#define PERM_DIRECTORY	S_IRWXU
+#define PERM_FILE		(S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
  
 #endif /* _DEFS_H_ */

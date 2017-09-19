@@ -3,7 +3,7 @@
 #include "Defs.h"
 
 // Compilation:
-// gcc -std=gnu99 -pthread ErrorHandling.c LogF.c "08 - PThreads Joinable with Sync improved.c" -o joinable_threads_synced1
+// gcc -std=gnu99 -pthread ErrorHandling.c LogF.c "08 - PThreads Joinable Mutexed improved.c" -o joinable_threads_synced1
 
 // Task:
 // Simple example of an application working with 2 threads, where parent waits results from child.
@@ -17,7 +17,7 @@ static long get_and_incr_x(long incr)
                                                             // And C++ may even use lazy initialization for mutex.
     static long x = 0;
     
-    // rtn and incr variables are on stack - i.e. local
+    // rtn and incr variables are on stack - i.e. local, so we need to use mutex for access to it.
     long rtn;
     
     ec_rv( pthread_mutex_lock(&mtx) )
@@ -36,7 +36,7 @@ static void* thread_func(void* arg)
     long val = 0;
     while (val < (long)arg)
     {
-        val = get_and_incr_x(1);
+        val = get_and_incr_x(1); // Use local variable, because it is thread safe.
         printf("Thread 2, counter value %ld\n", val);
         sleep(1);
     }
@@ -56,7 +56,7 @@ int main(void)
     long val = 0;
     while (val < 10)
     {
-        val = get_and_incr_x(1);
+        val = get_and_incr_x(1); // Use local variable, because it is thread safe.
         printf("Thread 1, counter value %ld\n", val);
         sleep(2);
     }
